@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
-import { OperlogService } from './operlog.service';
-import { OperlogController } from './operlog.controller';
+import { Module } from '@nestjs/common'
+
+import { OperlogController } from './operlog.controller'
+import { OperlogService } from './operlog.service'
 
 @Module({
   controllers: [OperlogController],

@@ -1,8 +1,9 @@
-import * as Lodash from 'lodash';
-export const controllerTem = (options) => {
-  const { BusinessName, businessName, functionName, moduleName } = options;
-  const serviceName = `${Lodash.upperFirst(BusinessName)}Service`;
-  const serviceInstance = `${businessName}Service`;
+import * as Lodash from 'lodash'
+
+export function controllerTem(options) {
+  const { BusinessName, businessName, functionName, moduleName } = options
+  const serviceName = `${Lodash.upperFirst(BusinessName)}Service`
+  const serviceInstance = `${businessName}Service`
   return `
 import { Controller, Get, Post, Put, Body, Query, Param, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -60,5 +61,5 @@ constructor(private readonly ${serviceInstance}: ${serviceName}) {}
     remove(@Param('id') id: string) {
         return this.${serviceInstance}.remove(+id);
     }
-}`;
-};
+}`
+}

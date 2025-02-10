@@ -1,8 +1,8 @@
-import * as Lodash from 'lodash';
-import { GenConstants } from 'src/common/constant/genConstants';
+import * as Lodash from 'lodash'
+import { GenConstants } from 'src/common/constant/genConstants'
 
-export const serviceTem = (options) => {
-  const { BusinessName, primaryKey, businessName } = options;
+export function serviceTem(options) {
+  const { BusinessName, primaryKey, businessName } = options
   return `
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository ,Not ,In,Like} from 'typeorm';
@@ -64,70 +64,70 @@ constructor(
         );
         return ResultData.ok({value:res.affected >= 1});
     }
-}`;
-};
+}`
+}
 
 /**
  * 列表返回字段
  * @param options
  * @returns
  */
-const getListFiledSelectStr = (options) => {
-  const { columns } = options;
+function getListFiledSelectStr(options) {
+  const { columns } = options
   return columns
-    .filter((column) => column.isList == '1')
+    .filter(column => column.isList == '1')
     .map((column) => {
-      return `"entity.${column.javaField}"`;
+      return `"entity.${column.javaField}"`
     })
-    .join(',');
-};
+    .join(',')
+}
 
 /**
  * 列表查询条件
  * @param options
  * @returns
  */
-const getListQueryStr = (options) => {
-  const { columns } = options;
+function getListQueryStr(options) {
+  const { columns } = options
   return columns
-    .filter((column) => column.isQuery == '1')
+    .filter(column => column.isQuery == '1')
     .map((column) => {
       switch (column.queryType) {
         case GenConstants.QUERY_EQ:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} = :${column.javaField}", {${column.javaField}: query.${column.javaField}});
-        }`;
+        }`
         case GenConstants.QUERY_NE:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} != :${column.javaField}", {${column.javaField}: query.${column.javaField}});
-        }`;
+        }`
         case GenConstants.QUERY_GT:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} > :${column.javaField}", {${column.javaField}: query.${column.javaField}});
-        }`;
+        }`
         case GenConstants.QUERY_GTE:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} >= :${column.javaField}", {${column.javaField}: query.${column.javaField}});
-        }`;
+        }`
         case GenConstants.QUERY_LT:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} < :${column.javaField}", {${column.javaField}: query.${column.javaField}});
-        }`;
+        }`
         case GenConstants.QUERY_LTE:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} <= :${column.javaField}", {${column.javaField}: query.${column.javaField}});
-        }`;
+        }`
         case GenConstants.QUERY_LIKE:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} LIKE :${column.javaField}", {${column.javaField}: \`%\${query.${column.javaField}}%\`});
-        }`;
+        }`
         case GenConstants.QUERY_BETWEEN:
           return `if(query.${column.javaField}){
           entity.andWhere("entity.${column.javaField} BETWEEN :start AND :end", { start: query.params.beginTime, end: query.params.endTime });
-        }`;
+        }`
         default:
-          return ``;
+          return ``
       }
     })
-    .join('\n\t');
-};
+    .join('\n\t')
+}

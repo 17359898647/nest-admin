@@ -1,8 +1,9 @@
-import { Type, applyDecorators } from '@nestjs/common';
-import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
-import { ResultData } from '../utils/result';
+import { applyDecorators, Type } from '@nestjs/common'
+import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger'
 
-const baseTypeNames = ['String', 'Number', 'Boolean'];
+import { ResultData } from '../utils/result'
+
+const baseTypeNames = ['String', 'Number', 'Boolean']
 /**
  * 封装 swagger 返回统一结构
  * 支持复杂类型 {  code, msg, data }
@@ -10,15 +11,16 @@ const baseTypeNames = ['String', 'Number', 'Boolean'];
  * @param isArray data 是否是数组
  * @param isPager 设置为 true, 则 data 类型为 { list, total } , false data 类型是纯数组
  */
-export const ApiDataResponse = <TModel extends Type<any>>(model?: TModel, isArray?: boolean, isPager?: boolean) => {
-  let items = null;
-  const modelIsBaseType = model && baseTypeNames.includes(model.name);
+export function ApiDataResponse<TModel extends Type<any>>(model?: TModel, isArray?: boolean, isPager?: boolean) {
+  let items = null
+  const modelIsBaseType = model && baseTypeNames.includes(model.name)
   if (modelIsBaseType) {
-    items = { type: model.name.toLocaleLowerCase() };
-  } else {
-    items = { $ref: getSchemaPath(model) };
+    items = { type: model.name.toLocaleLowerCase() }
   }
-  let prop = null;
+  else {
+    items = { $ref: getSchemaPath(model) }
+  }
+  let prop = null
 
   if (isArray && isPager) {
     prop = {
@@ -33,15 +35,18 @@ export const ApiDataResponse = <TModel extends Type<any>>(model?: TModel, isArra
           default: 0,
         },
       },
-    };
-  } else if (isArray) {
+    }
+  }
+  else if (isArray) {
     prop = {
       type: 'array',
       items,
-    };
-  } else if (model) {
-    prop = items;
-  } else {
+    }
+  }
+  else if (model) {
+    prop = items
+  }
+  else {
     prop = prop = {
       type: 'object',
       properties: {
@@ -50,7 +55,7 @@ export const ApiDataResponse = <TModel extends Type<any>>(model?: TModel, isArra
           default: true,
         },
       },
-    };
+    }
   }
   return applyDecorators(
     ApiExtraModels(...(model && !modelIsBaseType ? [ResultData, model] : [ResultData])),
@@ -66,5 +71,5 @@ export const ApiDataResponse = <TModel extends Type<any>>(model?: TModel, isArra
         ],
       },
     }),
-  );
-};
+  )
+}

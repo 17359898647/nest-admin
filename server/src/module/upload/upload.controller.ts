@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Query, UploadedFile, UseInterceptors, HttpCode } from '@nestjs/common';
-import { UploadService } from './upload.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiBody, ApiQuery } from '@nestjs/swagger';
-import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './dto/index';
-import { ResultData } from 'src/common/utils/result';
+import { Body, Controller, Get, HttpCode, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
+import { ResultData } from 'src/common/utils/result'
+
+import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './dto/index'
+import { UploadService } from './upload.service'
 
 @ApiTags('通用-文件上传')
 @Controller('common/upload')
@@ -26,8 +27,8 @@ export class UploadController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async singleFileUpload(@UploadedFile() file: Express.Multer.File) {
-    const res = await this.uploadService.singleFileUpload(file);
-    return ResultData.ok(res);
+    const res = await this.uploadService.singleFileUpload(file)
+    return ResultData.ok(res)
   }
 
   /**
@@ -44,7 +45,7 @@ export class UploadController {
   @HttpCode(200)
   @Get('/chunk/uploadId')
   getChunkUploadId() {
-    return this.uploadService.getChunkUploadId();
+    return this.uploadService.getChunkUploadId()
   }
 
   /**
@@ -62,7 +63,7 @@ export class UploadController {
   @Post('/chunk')
   @UseInterceptors(FileInterceptor('file'))
   chunkFileUpload(@UploadedFile() file: Express.Multer.File, @Body() body: ChunkFileDto) {
-    return this.uploadService.chunkFileUpload(file, body);
+    return this.uploadService.chunkFileUpload(file, body)
   }
 
   /**
@@ -79,7 +80,7 @@ export class UploadController {
   @HttpCode(200)
   @Post('/chunk/merge')
   chunkMergeFile(@Body() body: ChunkMergeFileDto) {
-    return this.uploadService.chunkMergeFile(body);
+    return this.uploadService.chunkMergeFile(body)
   }
 
   /**
@@ -98,7 +99,7 @@ export class UploadController {
   @HttpCode(200)
   @Get('/chunk/result')
   getChunkUploadResult(@Query() query: { uploadId: string }) {
-    return this.uploadService.getChunkUploadResult(query.uploadId);
+    return this.uploadService.getChunkUploadResult(query.uploadId)
   }
 
   /**
@@ -113,6 +114,6 @@ export class UploadController {
   })
   @Get('/cos/authorization')
   getAuthorization(@Query() query: { key: string }) {
-    return this.uploadService.getAuthorization(query.key);
+    return this.uploadService.getAuthorization(query.key)
   }
 }

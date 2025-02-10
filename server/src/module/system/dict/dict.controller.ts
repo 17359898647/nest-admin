@@ -1,17 +1,18 @@
-import { Controller, Get, Post, Body, Query, Request, Put, Res, HttpCode, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody, ApiConsumes, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
-import { DictService } from './dict.service';
-import { CreateDictTypeDto, UpdateDictTypeDto, ListDictType, CreateDictDataDto, UpdateDictDataDto, ListDictData } from './dto/index';
-import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
-import { Response } from 'express';
-import { GetNowDate } from 'src/common/utils';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, Request, Res } from '@nestjs/common'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
+import { Response } from 'express'
+import { RequirePermission } from 'src/common/decorators/require-premission.decorator'
+import { GetNowDate } from 'src/common/utils'
+
+import { DictService } from './dict.service'
+import { CreateDictDataDto, CreateDictTypeDto, ListDictData, ListDictType, UpdateDictDataDto, UpdateDictTypeDto } from './dto/index'
 
 @ApiTags('字典管理')
 @Controller('system/dict')
 export class DictController {
   constructor(private readonly dictService: DictService) {}
 
-  //字典类型
+  // 字典类型
   @ApiOperation({
     summary: '字典类型-创建',
   })
@@ -23,9 +24,9 @@ export class DictController {
   @HttpCode(200)
   @Post('/type')
   createType(@Body() createDictTypeDto: CreateDictTypeDto, @Request() req) {
-    createDictTypeDto['createTime'] = GetNowDate();
-    createDictTypeDto['createBy'] = req.user.user.userName;
-    return this.dictService.createType(createDictTypeDto);
+    createDictTypeDto['createTime'] = GetNowDate()
+    createDictTypeDto['createBy'] = req.user.user.userName
+    return this.dictService.createType(createDictTypeDto)
   }
 
   @ApiOperation({
@@ -34,7 +35,7 @@ export class DictController {
   @RequirePermission('system:dict:remove')
   @Delete('/type/refreshCache')
   refreshCache() {
-    return this.dictService.resetDictCache();
+    return this.dictService.resetDictCache()
   }
 
   @ApiOperation({
@@ -43,8 +44,8 @@ export class DictController {
   @RequirePermission('system:dict:remove')
   @Delete('/type/:id')
   deleteType(@Param('id') ids: string) {
-    const dictIds = ids.split(',').map((id) => +id);
-    return this.dictService.deleteType(dictIds);
+    const dictIds = ids.split(',').map(id => +id)
+    return this.dictService.deleteType(dictIds)
   }
 
   @ApiOperation({
@@ -53,7 +54,7 @@ export class DictController {
   @RequirePermission('system:dict:edit')
   @Put('/type')
   updateType(@Body() updateDictTypeDto: UpdateDictTypeDto) {
-    return this.dictService.updateType(updateDictTypeDto);
+    return this.dictService.updateType(updateDictTypeDto)
   }
 
   @ApiOperation({
@@ -62,7 +63,7 @@ export class DictController {
   @RequirePermission('system:dict:list')
   @Get('/type/list')
   findAllType(@Query() query: ListDictType) {
-    return this.dictService.findAllType(query);
+    return this.dictService.findAllType(query)
   }
 
   @ApiOperation({
@@ -71,7 +72,7 @@ export class DictController {
   @RequirePermission('system:dict:query')
   @Get('/type/optionselect')
   findOptionselect() {
-    return this.dictService.findOptionselect();
+    return this.dictService.findOptionselect()
   }
 
   @ApiOperation({
@@ -80,7 +81,7 @@ export class DictController {
   @RequirePermission('system:dict:query')
   @Get('/type/:id')
   findOneType(@Param('id') id: string) {
-    return this.dictService.findOneType(+id);
+    return this.dictService.findOneType(+id)
   }
 
   // 字典数据
@@ -91,9 +92,9 @@ export class DictController {
   @HttpCode(200)
   @Post('/data')
   createDictData(@Body() createDictDataDto: CreateDictDataDto, @Request() req) {
-    createDictDataDto['createTime'] = GetNowDate();
-    createDictDataDto['createBy'] = req.user.user.userName;
-    return this.dictService.createDictData(createDictDataDto);
+    createDictDataDto['createTime'] = GetNowDate()
+    createDictDataDto['createBy'] = req.user.user.userName
+    return this.dictService.createDictData(createDictDataDto)
   }
 
   @ApiOperation({
@@ -102,7 +103,7 @@ export class DictController {
   @RequirePermission('system:dict:remove')
   @Delete('/data/:id')
   deleteDictData(@Param('id') id: string) {
-    return this.dictService.deleteDictData(+id);
+    return this.dictService.deleteDictData(+id)
   }
 
   @ApiOperation({
@@ -111,7 +112,7 @@ export class DictController {
   @RequirePermission('system:dict:edit')
   @Put('/data')
   updateDictData(@Body() updateDictDataDto: UpdateDictDataDto) {
-    return this.dictService.updateDictData(updateDictDataDto);
+    return this.dictService.updateDictData(updateDictDataDto)
   }
 
   @ApiOperation({
@@ -120,7 +121,7 @@ export class DictController {
   @RequirePermission('system:dict:list')
   @Get('/data/list')
   findAllData(@Query() query: ListDictData) {
-    return this.dictService.findAllData(query);
+    return this.dictService.findAllData(query)
   }
 
   @ApiOperation({
@@ -128,7 +129,7 @@ export class DictController {
   })
   @Get('/data/:id')
   findOneDictData(@Param('id') dictCode: string) {
-    return this.dictService.findOneDictData(+dictCode);
+    return this.dictService.findOneDictData(+dictCode)
   }
 
   @ApiOperation({
@@ -136,13 +137,13 @@ export class DictController {
   })
   @Get('/data/type/:id')
   findOneDataType(@Param('id') dictType: string) {
-    return this.dictService.findOneDataType(dictType);
+    return this.dictService.findOneDataType(dictType)
   }
 
   @ApiOperation({ summary: '导出字典数据为xlsx文件' })
   @RequirePermission('system:dict:export')
   @Post('/type/export')
   async export(@Res() res: Response, @Body() body: ListDictType): Promise<void> {
-    return this.dictService.export(res, body);
+    return this.dictService.export(res, body)
   }
 }

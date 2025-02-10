@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Put, Param, Query, Res, Delete, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody, ApiConsumes, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { Response } from 'express';
-import { RequirePermission } from 'src/common/decorators/require-premission.decorator';
-import { RequireRole } from 'src/common/decorators/require-role.decorator';
-import { UploadService } from 'src/module/upload/upload.service';
-import { CreateUserDto, UpdateUserDto, ListUserDto, ChangeStatusDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto } from './dto/index';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ResultData } from 'src/common/utils/result';
-import { GetNowDate } from 'src/common/utils';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, Res, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
+import { Response } from 'express'
+import { RequirePermission } from 'src/common/decorators/require-premission.decorator'
+import { RequireRole } from 'src/common/decorators/require-role.decorator'
+import { GetNowDate } from 'src/common/utils'
+import { ResultData } from 'src/common/utils/result'
+import { UploadService } from 'src/module/upload/upload.service'
+
+import { ChangeStatusDto, CreateUserDto, ListUserDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto, UpdateUserDto } from './dto/index'
+import { UserService } from './user.service'
 
 @ApiTags('用户管理')
 @ApiBearerAuth()
@@ -25,8 +26,8 @@ export class UserController {
   @RequirePermission('system:user:query')
   @Get('/profile')
   profile(@Request() req) {
-    const user = req.user.user;
-    return this.userService.profile(user);
+    const user = req.user.user
+    return this.userService.profile(user)
   }
 
   @ApiOperation({
@@ -35,8 +36,8 @@ export class UserController {
   @RequirePermission('system:user:edit')
   @Put('/profile')
   updateProfile(@Request() req, @Body() updateProfileDto: UpdateProfileDto) {
-    const user = req.user;
-    return this.userService.updateProfile(user, updateProfileDto);
+    const user = req.user
+    return this.userService.updateProfile(user, updateProfileDto)
   }
 
   @ApiOperation({
@@ -46,10 +47,10 @@ export class UserController {
   @Post('/profile/avatar')
   @UseInterceptors(FileInterceptor('avatarfile'))
   async avatar(@UploadedFile() avatarfile: Express.Multer.File) {
-    const res = await this.uploadService.singleFileUpload(avatarfile);
+    const res = await this.uploadService.singleFileUpload(avatarfile)
     return ResultData.ok({
       imgUrl: res.fileName,
-    });
+    })
   }
 
   @ApiOperation({
@@ -58,8 +59,8 @@ export class UserController {
   @RequirePermission('system:user:edit')
   @Put('/profile/updatePwd')
   updatePwd(@Request() req, @Body() updatePwdDto: UpdatePwdDto) {
-    const user = req.user;
-    return this.userService.updatePwd(user, updatePwdDto);
+    const user = req.user
+    return this.userService.updatePwd(user, updatePwdDto)
   }
 
   @ApiOperation({
@@ -72,9 +73,9 @@ export class UserController {
   @RequirePermission('system:user:add')
   @Post()
   create(@Body() createUserDto: CreateUserDto, @Request() req) {
-    createUserDto['createTime'] = GetNowDate();
-    createUserDto['createBy'] = req.user.user.userName;
-    return this.userService.create(createUserDto);
+    createUserDto['createTime'] = GetNowDate()
+    createUserDto['createBy'] = req.user.user.userName
+    return this.userService.create(createUserDto)
   }
 
   @ApiOperation({
@@ -83,8 +84,8 @@ export class UserController {
   @RequirePermission('system:user:list')
   @Get('list')
   findAll(@Query() query: ListUserDto, @Request() req) {
-    const user = req.user.user;
-    return this.userService.findAll(query, user);
+    const user = req.user.user
+    return this.userService.findAll(query, user)
   }
 
   @ApiOperation({
@@ -93,7 +94,7 @@ export class UserController {
   @RequirePermission('system:dept:query')
   @Get('deptTree')
   deptTree() {
-    return this.userService.deptTree();
+    return this.userService.deptTree()
   }
 
   @ApiOperation({
@@ -102,7 +103,7 @@ export class UserController {
   @RequirePermission('system:user:add')
   @Get()
   findPostAndRoleAll() {
-    return this.userService.findPostAndRoleAll();
+    return this.userService.findPostAndRoleAll()
   }
 
   @ApiOperation({
@@ -111,7 +112,7 @@ export class UserController {
   @RequireRole('admin')
   @Get('authRole/:id')
   authRole(@Param('id') id: string) {
-    return this.userService.authRole(+id);
+    return this.userService.authRole(+id)
   }
 
   @ApiOperation({
@@ -120,7 +121,7 @@ export class UserController {
   @RequireRole('admin')
   @Put('authRole')
   updateAuthRole(@Query() query) {
-    return this.userService.updateAuthRole(query);
+    return this.userService.updateAuthRole(query)
   }
 
   @ApiOperation({
@@ -129,7 +130,7 @@ export class UserController {
   @RequirePermission('system:user:query')
   @Get(':userId')
   findOne(@Param('userId') userId: string) {
-    return this.userService.findOne(+userId);
+    return this.userService.findOne(+userId)
   }
 
   @ApiOperation({
@@ -142,7 +143,7 @@ export class UserController {
   @RequireRole('admin')
   @Put('changeStatus')
   changeStatus(@Body() changeStatusDto: ChangeStatusDto) {
-    return this.userService.changeStatus(changeStatusDto);
+    return this.userService.changeStatus(changeStatusDto)
   }
 
   @ApiOperation({
@@ -155,8 +156,8 @@ export class UserController {
   @RequirePermission('system:user:edit')
   @Put()
   update(@Body() updateUserDto: UpdateUserDto, @Request() req) {
-    const userId = req.user.userId;
-    return this.userService.update(updateUserDto, userId);
+    const userId = req.user.userId
+    return this.userService.update(updateUserDto, userId)
   }
 
   @ApiOperation({
@@ -169,7 +170,7 @@ export class UserController {
   @RequireRole('admin')
   @Put('resetPwd')
   resetPwd(@Body() body: ResetPwdDto) {
-    return this.userService.resetPwd(body);
+    return this.userService.resetPwd(body)
   }
 
   @ApiOperation({
@@ -178,15 +179,15 @@ export class UserController {
   @RequireRole('admin')
   @Delete(':id')
   remove(@Param('id') ids: string) {
-    const menuIds = ids.split(',').map((id) => +id);
-    return this.userService.remove(menuIds);
+    const menuIds = ids.split(',').map(id => +id)
+    return this.userService.remove(menuIds)
   }
 
   @ApiOperation({ summary: '导出用户信息数据为xlsx' })
   @RequirePermission('system:user:export')
   @Post('/export')
   async export(@Res() res: Response, @Body() body: ListUserDto, @Request() req): Promise<void> {
-    const user = req.user.user;
-    return this.userService.export(res, body, user);
+    const user = req.user.user
+    return this.userService.export(res, body, user)
   }
 }

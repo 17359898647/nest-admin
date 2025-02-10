@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OperlogService } from './operlog.service';
-import { CreateOperlogDto } from './dto/create-operlog.dto';
-import { UpdateOperlogDto } from './dto/update-operlog.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+
+import { CreateOperlogDto } from './dto/create-operlog.dto'
+import { UpdateOperlogDto } from './dto/update-operlog.dto'
+import { OperlogService } from './operlog.service'
 
 @Controller('monitor/operlog')
 export class OperlogController {
@@ -9,26 +10,26 @@ export class OperlogController {
 
   @Post()
   create(@Body() createOperlogDto: CreateOperlogDto) {
-    return this.operlogService.create(createOperlogDto);
+    return this.operlogService.create(createOperlogDto)
   }
 
   @Get()
   findAll() {
-    return this.operlogService.findAll();
+    return this.operlogService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.operlogService.findOne(+id);
+    return this.operlogService.findOne(+id)
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOperlogDto: UpdateOperlogDto) {
-    return this.operlogService.update(+id, updateOperlogDto);
+    return this.operlogService.update(+id, updateOperlogDto)
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.operlogService.remove(+id);
+    return this.operlogService.remove(+id)
   }
 }

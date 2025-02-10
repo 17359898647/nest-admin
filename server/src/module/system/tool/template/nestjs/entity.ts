@@ -1,10 +1,10 @@
-import { GenConstants } from 'src/common/constant/genConstants';
-import * as Lodash from 'lodash';
+import * as Lodash from 'lodash'
+import { GenConstants } from 'src/common/constant/genConstants'
 
-export const entityTem = (options) => {
-  const { BusinessName, tableName, tableComment } = options;
+export function entityTem(options) {
+  const { BusinessName, tableName, tableComment } = options
 
-  const contentTem = content(options);
+  const contentTem = content(options)
   return `
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -14,45 +14,48 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class ${Lodash.upperFirst(BusinessName)}Entity {
 ${contentTem}
 }
-`;
-};
+`
+}
 
-const content = (options) => {
-  const { columns } = options;
-  let html = ``;
-  columns.sort((a, b) => b.isPk - a.isPk); //保证主键始终在第一个
+function content(options) {
+  const { columns } = options
+  let html = ``
+  columns.sort((a, b) => b.isPk - a.isPk) // 保证主键始终在第一个
   columns.forEach((column) => {
-    const { javaType, javaField, isPk, columnType, columnComment, columnDefault } = column;
-    const filed = convertToSnakeCase(javaField);
-    const type = lowercaseFirstLetter(javaType);
+    const { javaType, javaField, isPk, columnType, columnComment, columnDefault } = column
+    const filed = convertToSnakeCase(javaField)
+    const type = lowercaseFirstLetter(javaType)
     if (isPk == '1') {
-      html += `\t@PrimaryGeneratedColumn({ type: '${columnType}', name: '${filed}', comment: '${columnComment}' })\n\tpublic ${javaField}: ${type};\n`;
-    } else if (!GenConstants.BASE_ENTITY.includes(javaField)) {
-      html += `\n\t@Column({ type: '${columnType}', name: '${filed}', default: ${getColumnDefault(column)}, comment: '${columnComment}' })\n\tpublic ${javaField}: ${type};\n`;
+      html += `\t@PrimaryGeneratedColumn({ type: '${columnType}', name: '${filed}', comment: '${columnComment}' })\n\tpublic ${javaField}: ${type};\n`
     }
-  });
+    else if (!GenConstants.BASE_ENTITY.includes(javaField)) {
+      html += `\n\t@Column({ type: '${columnType}', name: '${filed}', default: ${getColumnDefault(column)}, comment: '${columnComment}' })\n\tpublic ${javaField}: ${type};\n`
+    }
+  })
 
-  return html;
-};
+  return html
+}
 
 function convertToSnakeCase(str) {
-  return str.replace(/([A-Z])/g, '_$1').toLowerCase();
+  return str.replace(/([A-Z])/g, '_$1').toLowerCase()
 }
 
 function lowercaseFirstLetter(str) {
   if (str.length === 0 || str === 'Date') {
-    return str;
+    return str
   }
-  return str.charAt(0).toLowerCase() + str.slice(1);
+  return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
 // 字段默认值
 function getColumnDefault(column) {
   if (column.columnType === 'char') {
-    return column.columnDefault == '1';
-  } else if (column.columnType === 'varchar') {
-    return "''";
-  } else {
-    return column.columnDefault;
+    return column.columnDefault == '1'
+  }
+  else if (column.columnType === 'varchar') {
+    return '\'\''
+  }
+  else {
+    return column.columnDefault
   }
 }

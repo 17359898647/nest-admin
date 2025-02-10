@@ -1,5 +1,5 @@
-import { CanActivate, Inject, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { CanActivate, ExecutionContext, ForbiddenException, Inject, Injectable } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -7,16 +7,16 @@ export class RolesGuard implements CanActivate {
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     // 全局配置，
-    const req = ctx.switchToHttp().getRequest();
+    const req = ctx.switchToHttp().getRequest()
 
-    const role = this.reflector.getAllAndOverride('role', [ctx.getClass(), ctx.getHandler()]);
+    const role = this.reflector.getAllAndOverride('role', [ctx.getClass(), ctx.getHandler()])
 
-    //不需要鉴权
+    // 不需要鉴权
     if (role) {
-      return this.hasRole(role, req.user.roles);
+      return this.hasRole(role, req.user.roles)
     }
 
-    return true;
+    return true
   }
 
   /**
@@ -26,6 +26,6 @@ export class RolesGuard implements CanActivate {
    * @returns
    */
   hasRole(role: string, roles: string[]) {
-    return roles.some((v) => v === role);
+    return roles.includes(role)
   }
 }

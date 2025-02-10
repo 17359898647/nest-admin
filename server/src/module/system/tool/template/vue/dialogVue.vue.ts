@@ -1,22 +1,22 @@
-import { indexScriptDicts } from './indexVue.vue';
+import { indexScriptDicts } from './indexVue.vue'
 
-export const dialogVue = (options) => {
-  const html = generateTemplate(options);
-  const script = generateScriptSetup(options);
+export function dialogVue(options) {
+  const html = generateTemplate(options)
+  const script = generateScriptSetup(options)
   return `
     ${html}
     ${script}
-  `;
-};
+  `
+}
 
-const generateTemplate = ({ columns }) => {
-  let html = '';
+function generateTemplate({ columns }) {
+  let html = ''
   columns.forEach((item) => {
     if (item.isInsert === '1' && item.isPk === '0') {
-      const comment = item.columnComment.split('(')[0];
-      const field = item.javaField;
-      const dictType = item.dictType;
-      const htmlType = item.htmlType;
+      const comment = item.columnComment.split('(')[0]
+      const field = item.javaField
+      const dictType = item.dictType
+      const htmlType = item.htmlType
 
       const htmlMap = {
         input: `
@@ -94,11 +94,11 @@ const generateTemplate = ({ columns }) => {
             <el-input v-model="form.${field}" type="textarea" placeholder="请输入内容" />
           </el-form-item>
         `,
-      };
+      }
 
-      html += htmlMap[htmlType] || '';
+      html += htmlMap[htmlType] || ''
     }
-  });
+  })
 
   return `
     <template>
@@ -114,13 +114,13 @@ const generateTemplate = ({ columns }) => {
         </template>
       </el-dialog>
     </template>
-  `;
-};
+  `
+}
 
-const generateScriptSetup = ({ columns, BusinessName, moduleName, businessName, primaryKey, functionName }) => {
-  const dicts = indexScriptDicts(columns);
-  const form = generateFormData(columns);
-  const rules = generateRulesData(columns);
+function generateScriptSetup({ columns, BusinessName, moduleName, businessName, primaryKey, functionName }) {
+  const dicts = indexScriptDicts(columns)
+  const form = generateFormData(columns)
+  const rules = generateRulesData(columns)
 
   return `
     <script setup>
@@ -169,22 +169,22 @@ const generateScriptSetup = ({ columns, BusinessName, moduleName, businessName, 
     };
     defineExpose({ openDialog });
     </script>
-  `;
-};
+  `
+}
 
-const generateFormData = (columns) => {
+function generateFormData(columns) {
   return columns
-    .filter((item) => item.isInsert === '1' && item.isPk === '0')
+    .filter(item => item.isInsert === '1' && item.isPk === '0')
     .map(
-      (item) => `
+      item => `
     ${item.javaField}: ${item.htmlType === 'checkbox' ? '[]' : '""'}`,
     )
-    .join(',\n');
-};
+    .join(',\n')
+}
 
-const generateRulesData = (columns) => {
+function generateRulesData(columns) {
   return columns
-    .filter((item) => item.isRequired === '1')
-    .map((item) => `${item.javaField}: [{ required: true, message: "${item.columnComment}不能为空", trigger: "blur" }]`)
-    .join(',\n');
-};
+    .filter(item => item.isRequired === '1')
+    .map(item => `${item.javaField}: [{ required: true, message: "${item.columnComment}不能为空", trigger: "blur" }]`)
+    .join(',\n')
+}

@@ -1,16 +1,16 @@
-import { IsDateString, IsNumberString, IsObject, IsOptional, IsString, IsEnum } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { SortRuleEnum } from 'src/common/enum/index';
+import { ApiProperty } from '@nestjs/swagger'
+import { IsDateString, IsEnum, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator'
+import { SortRuleEnum } from 'src/common/enum/index'
 
 /**
  * 时间区间对象
  */
 export class DateParamsDTO {
   @IsDateString()
-  beginTime: string;
+  beginTime: string
 
   @IsDateString()
-  endTime: string;
+  endTime: string
 }
 
 /**
@@ -19,11 +19,11 @@ export class DateParamsDTO {
 export class PagingDto {
   @ApiProperty({ required: true, description: '当前分页' })
   @IsNumberString()
-  pageNum: number;
+  pageNum: number
 
   @ApiProperty({ required: true, description: '每页数量' })
   @IsNumberString()
-  pageSize: number;
+  pageSize: number
 
   /**
    * 时间区间
@@ -31,7 +31,7 @@ export class PagingDto {
   @ApiProperty({ required: false, description: '时间范围' })
   @IsOptional()
   @IsObject()
-  params?: DateParamsDTO;
+  params?: DateParamsDTO
 
   /**
    * 排序字段
@@ -39,7 +39,7 @@ export class PagingDto {
   @ApiProperty({ required: false, description: '排序字段' })
   @IsOptional()
   @IsString()
-  orderByColumn?: string;
+  orderByColumn?: string
 
   /**
    * 排序规则
@@ -47,5 +47,5 @@ export class PagingDto {
   @ApiProperty({ required: false, description: '排序规则' })
   @IsOptional()
   @IsEnum(SortRuleEnum)
-  isAsc?: string;
+  isAsc?: string
 }
