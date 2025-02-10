@@ -302,7 +302,7 @@ function indexTableTemplate(columns, businessName, moduleName) {
 
 export function indexScriptDicts(columns) {
   let script = ''
-  let dicts = []
+  const dicts = []
   columns.forEach((item) => {
     if (item.dictType != '') {
       dicts.push(item.dictType)

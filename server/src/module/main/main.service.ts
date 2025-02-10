@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { ListToTree } from 'src/common/utils/index'
 import { ResultData, SUCCESS_CODE } from 'src/common/utils/result'
 import { AxiosService } from 'src/module/axios/axios.service'
 

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { DataScopeEnum } from 'src/common/enum/index'
 import { ListToTree } from 'src/common/utils/index'
 import { ResultData } from 'src/common/utils/result'
-import { Like, Repository, SelectQueryBuilder } from 'typeorm'
+import { Repository, SelectQueryBuilder } from 'typeorm'
 
 import { CreateDeptDto, ListDeptDto, UpdateDeptDto } from './dto/index'
 import { SysDeptEntity } from './entities/dept.entity'

@@ -12,9 +12,12 @@ export default eslint({
       'ts/consistent-type-imports': 0,
       'n/prefer-global/process': 0,
       'dot-notation': 0,
+      'node/no-path-concat': 0,
+      'unused-imports/no-unused-vars': 0,
+      'no-unused-vars': 0,
     },
   },
-  isInEditor: true,
+  isInEditor: false,
   jsonc: true,
   stylistic: {
     overrides: {

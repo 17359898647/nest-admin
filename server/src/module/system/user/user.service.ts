@@ -19,7 +19,7 @@ import { SysPostEntity } from '../post/entities/post.entity'
 import { AuthUserCancelAllDto, AuthUserCancelDto, AuthUserSelectAllDto } from '../role/dto/index'
 import { RoleService } from '../role/role.service'
 
-import { AllocatedListDto, ChangeStatusDto, CreateUserDto, ListUserDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto, UpdateUserDto, UpdateBalanceDto } from './dto/index'
+import { AllocatedListDto, ChangeStatusDto, CreateUserDto, ListUserDto, ResetPwdDto, UpdateBalanceDto, UpdateProfileDto, UpdatePwdDto, UpdateUserDto } from './dto/index'
 import { UserEntity } from './entities/sys-user.entity'
 import { SysUserWithPostEntity } from './entities/user-width-post.entity'
 import { SysUserWithRoleEntity } from './entities/user-width-role.entity'
@@ -823,8 +823,8 @@ export class UserService {
 
   /**
    * 修改用户余额
-   * @param updateBalanceDto 
-   * @returns 
+   * @param updateBalanceDto
+   * @returns
    */
   async updateBalance(updateBalanceDto: UpdateBalanceDto) {
     const { userId, amount } = updateBalanceDto
@@ -840,10 +840,10 @@ export class UserService {
 
     // 更新用户余额
     await this.userRepo.update(
-      { userId }, 
-      { balance: () => `balance + ${amount}` }
+      { userId },
+      { balance: () => `balance + ${amount}` },
     )
-    return ResultData.ok()
+    return this.findOne(userId)
   }
 
   /**

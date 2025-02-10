@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RequirePermission } from 'src/common/decorators/require-premission.decorator'
 
 import { CreateMenuDto, ListDeptDto, UpdateMenuDto } from './dto/index'

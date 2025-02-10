@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
+import { Controller, Delete, Get, Param } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { CacheService } from './cache.service'
 
