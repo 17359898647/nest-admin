@@ -467,10 +467,40 @@
         ]
       }
     },
+    "/system/user/balance": {
+      "put": {
+        "operationId": "UserController_updateBalance",
+        "summary": "用户-修改余额",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBalanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "用户管理"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/system/user/export": {
       "post": {
         "operationId": "UserController_export",
-        "summary": "导出用户信息数据为xlsx",
+        "summary": "用户-导出",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -3327,6 +3357,9 @@
           "remark": {
             "type": "string"
           },
+          "balance": {
+            "type": "number"
+          },
           "postSort": {
             "type": "number"
           }
@@ -3395,6 +3428,9 @@
           "remark": {
             "type": "string"
           },
+          "balance": {
+            "type": "number"
+          },
           "postSort": {
             "type": "number"
           },
@@ -3419,6 +3455,23 @@
         "required": [
           "userId",
           "password"
+        ]
+      },
+      "UpdateBalanceDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "description": "用户ID"
+          },
+          "amount": {
+            "type": "number",
+            "description": "金额变更值，可以为正数（增加金额）或负数（减少金额）"
+          }
+        },
+        "required": [
+          "userId",
+          "amount"
         ]
       },
       "DateParamsDTO": {
