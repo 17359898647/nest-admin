@@ -68,6 +68,11 @@ export class CreateUserDto {
   @Length(0, 500)
   remark?: string
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  balance?: number
+
   @ApiProperty({ required: true })
   @IsOptional()
   @IsNumber()
@@ -204,4 +209,20 @@ export class UpdatePwdDto {
   @IsString()
   @Length(0, 200)
   newPassword: string
+}
+
+export class UpdateBalanceDto {
+  @ApiProperty({
+    required: true,
+    description: '用户ID',
+  })
+  @IsNumber()
+  userId: number
+
+  @ApiProperty({
+    required: true,
+    description: '金额变更值，可以为正数（增加金额）或负数（减少金额）',
+  })
+  @IsNumber()
+  amount: number
 }

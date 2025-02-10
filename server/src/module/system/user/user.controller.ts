@@ -8,7 +8,7 @@ import { GetNowDate } from 'src/common/utils'
 import { ResultData } from 'src/common/utils/result'
 import { UploadService } from 'src/module/upload/upload.service'
 
-import { ChangeStatusDto, CreateUserDto, ListUserDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto, UpdateUserDto } from './dto/index'
+import { ChangeStatusDto, CreateUserDto, ListUserDto, ResetPwdDto, UpdateBalanceDto, UpdateProfileDto, UpdatePwdDto, UpdateUserDto } from './dto/index'
 import { UserService } from './user.service'
 
 @ApiTags('用户管理')
@@ -183,7 +183,18 @@ export class UserController {
     return this.userService.remove(menuIds)
   }
 
-  @ApiOperation({ summary: '导出用户信息数据为xlsx' })
+  @ApiOperation({
+    summary: '用户-修改余额',
+  })
+  @RequirePermission('system:user:edit')
+  @Put('/balance')
+  updateBalance(@Body() updateBalanceDto: UpdateBalanceDto) {
+    return this.userService.updateBalance(updateBalanceDto)
+  }
+
+  @ApiOperation({
+    summary: '用户-导出',
+  })
   @RequirePermission('system:user:export')
   @Post('/export')
   async export(@Res() res: Response, @Body() body: ListUserDto, @Request() req): Promise<void> {

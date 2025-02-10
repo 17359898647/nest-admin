@@ -44,4 +44,7 @@ export class UserEntity extends BaseEntity {
 
   @Column({ type: 'timestamp', name: 'login_date', comment: '最后登录时间' })
   public loginDate: Date
+
+  @Column({ type: 'decimal', name: 'balance', precision: 10, scale: 2, default: 0, comment: '用户余额' })
+  public balance: number
 }

@@ -19,7 +19,7 @@ import { SysPostEntity } from '../post/entities/post.entity'
 import { AuthUserCancelAllDto, AuthUserCancelDto, AuthUserSelectAllDto } from '../role/dto/index'
 import { RoleService } from '../role/role.service'
 
-import { AllocatedListDto, ChangeStatusDto, CreateUserDto, ListUserDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto, UpdateUserDto } from './dto/index'
+import { AllocatedListDto, ChangeStatusDto, CreateUserDto, ListUserDto, ResetPwdDto, UpdateProfileDto, UpdatePwdDto, UpdateUserDto, UpdateBalanceDto } from './dto/index'
 import { UserEntity } from './entities/sys-user.entity'
 import { SysUserWithPostEntity } from './entities/user-width-post.entity'
 import { SysUserWithRoleEntity } from './entities/user-width-role.entity'
@@ -809,15 +809,40 @@ export class UserService {
    * @returns
    */
   async updatePwd(user: any, updatePwdDto: UpdatePwdDto) {
-    if (updatePwdDto.oldPassword === updatePwdDto.newPassword) {
-      return ResultData.fail(500, '新密码不能与旧密码相同')
+    const { oldPassword, newPassword } = updatePwdDto
+    const userInfo = await this.userRepo.findOne({ where: { userId: user.user.userId } })
+    const comparePassword = bcrypt.compareSync(oldPassword, userInfo.password)
+    if (!comparePassword) {
+      throw new BadRequestException('原密码错误')
     }
-    if (bcrypt.compareSync(user.user.password, updatePwdDto.oldPassword)) {
-      return ResultData.fail(500, '修改密码失败，旧密码错误')
+    const salt = bcrypt.genSaltSync(10)
+    const hashNewPassword = bcrypt.hashSync(newPassword, salt)
+    await this.userRepo.update({ userId: user.user.userId }, { password: hashNewPassword })
+    return ResultData.ok()
+  }
+
+  /**
+   * 修改用户余额
+   * @param updateBalanceDto 
+   * @returns 
+   */
+  async updateBalance(updateBalanceDto: UpdateBalanceDto) {
+    const { userId, amount } = updateBalanceDto
+    const user = await this.userRepo.findOne({ where: { userId } })
+    if (!user) {
+      throw new BadRequestException('用户不存在')
     }
 
-    const password = await bcrypt.hashSync(updatePwdDto.newPassword, bcrypt.genSaltSync(10))
-    await this.userRepo.update({ userId: user.user.userId }, { password })
+    // 如果是减少余额，需要检查余额是否足够
+    if (amount < 0 && user.balance + amount < 0) {
+      throw new BadRequestException('用户余额不足')
+    }
+
+    // 更新用户余额
+    await this.userRepo.update(
+      { userId }, 
+      { balance: () => `balance + ${amount}` }
+    )
     return ResultData.ok()
   }
 
