@@ -1367,6 +1367,82 @@
         ]
       }
     },
+    "/system/guess/{id}": {
+      "get": {
+        "operationId": "GuessController_findOne",
+        "summary": "获取单条记录",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "猜大小"
+        ]
+      },
+      "delete": {
+        "operationId": "GuessController_delete",
+        "summary": "删除记录",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "猜大小"
+        ]
+      }
+    },
+    "/system/guess/update": {
+      "post": {
+        "operationId": "GuessController_update",
+        "summary": "修改记录",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "猜大小"
+        ]
+      }
+    },
+    "/system/guess/create": {
+      "post": {
+        "operationId": "GuessController_create",
+        "summary": "手动创建记录",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "猜大小"
+        ]
+      }
+    },
     "/system/menu": {
       "post": {
         "operationId": "MenuController_create",

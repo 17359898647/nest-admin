@@ -73,4 +73,99 @@ export class GuessService {
       total,
     }
   }
+
+  /**
+   * 修改记录
+   */
+  async update(id: number, number: number) {
+    try {
+      const guess = await this.guessRepository.findOne({
+        where: { id },
+      })
+
+      if (!guess) {
+        throw new Error('记录不存在')
+      }
+
+      // 更新号码和结果
+      guess.number = number
+      guess.result = number > 5 ? '大' : '小'
+
+      await this.guessRepository.save(guess)
+
+      this.logger.log(`修改第 ${guess.issueNumber} 期猜大小成功：号码 ${number}，结果 ${guess.result}`)
+      return guess
+    }
+    catch (error) {
+      this.logger.error('修改猜大小失败', error)
+      throw error
+    }
+  }
+
+  /**
+   * 手动创建记录
+   */
+  async create(number: number) {
+    try {
+      // 生成期号：yyyyMMddHHmmss
+      const issueNumber = dayjs().format('YYYYMMDDHHmmss')
+
+      // 判断大小：大于5为大，小于等于5为小
+      const result = number > 5 ? '大' : '小'
+
+      // 保存到数据库
+      const guess = new Guess()
+      guess.issueNumber = issueNumber
+      guess.number = number
+      guess.result = result
+
+      await this.guessRepository.save(guess)
+
+      this.logger.log(`创建第 ${issueNumber} 期猜大小成功：号码 ${number}，结果 ${result}`)
+      return guess
+    }
+    catch (error) {
+      this.logger.error('创建猜大小失败', error)
+      throw error
+    }
+  }
+
+  /**
+   * 删除记录
+   */
+  async delete(id: number) {
+    try {
+      const guess = await this.guessRepository.findOne({
+        where: { id },
+      })
+
+      if (!guess) {
+        throw new Error('记录不存在')
+      }
+
+      await this.guessRepository.remove(guess)
+
+      this.logger.log(`删除第 ${guess.issueNumber} 期猜大小成功`)
+      return true
+    }
+    catch (error) {
+      this.logger.error('删除猜大小失败', error)
+      throw error
+    }
+  }
+
+  /**
+   * 获取单条记录
+   */
+  async findOne(id: number) {
+    const guess = await this.guessRepository.findOne({
+      where: { id },
+    })
+
+    if (!guess) {
+      throw new Error('记录不存在')
+    }
+
+    return guess
+  }
 }

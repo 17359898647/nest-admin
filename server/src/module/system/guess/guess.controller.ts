@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { GuessService } from './guess.service'
@@ -21,5 +21,32 @@ export class GuessController {
     @Query('size') size: number,
   ) {
     return await this.guessService.getHistory(page, size)
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: '获取单条记录' })
+  async findOne(@Param('id') id: number) {
+    return await this.guessService.findOne(id)
+  }
+
+  @Post('update')
+  @ApiOperation({ summary: '修改记录' })
+  async update(
+    @Body('id') id: number,
+    @Body('number') number: number,
+  ) {
+    return await this.guessService.update(id, number)
+  }
+
+  @Post('create')
+  @ApiOperation({ summary: '手动创建记录' })
+  async create(@Body('number') number: number) {
+    return await this.guessService.create(number)
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: '删除记录' })
+  async delete(@Param('id') id: number) {
+    return await this.guessService.delete(id)
   }
 }
