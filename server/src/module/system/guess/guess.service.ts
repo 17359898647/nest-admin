@@ -22,6 +22,20 @@ export class GuessService {
       // 生成期号：yyyyMMddHHmmss
       const issueNumber = dayjs().format('YYYYMMDDHHmmss')
 
+      // 查找是否已有指定结果
+      const existingGuess = await this.guessRepository.findOne({
+        where: { issueNumber },
+      })
+
+      if (existingGuess) {
+        // 更新创建时间
+        existingGuess.createTime = new Date()
+        await this.guessRepository.save(existingGuess)
+
+        this.logger.log(`第 ${issueNumber} 期已存在指定结果：号码 ${existingGuess.number}，结果 ${existingGuess.result}`)
+        return existingGuess
+      }
+
       // 生成1-10的随机数
       const number = Math.floor(Math.random() * 10) + 1
 
@@ -103,34 +117,6 @@ export class GuessService {
   }
 
   /**
-   * 手动创建记录
-   */
-  async create(number: number) {
-    try {
-      // 生成期号：yyyyMMddHHmmss
-      const issueNumber = dayjs().format('YYYYMMDDHHmmss')
-
-      // 判断大小：大于5为大，小于等于5为小
-      const result = number > 5 ? '大' : '小'
-
-      // 保存到数据库
-      const guess = new Guess()
-      guess.issueNumber = issueNumber
-      guess.number = number
-      guess.result = result
-
-      await this.guessRepository.save(guess)
-
-      this.logger.log(`创建第 ${issueNumber} 期猜大小成功：号码 ${number}，结果 ${result}`)
-      return guess
-    }
-    catch (error) {
-      this.logger.error('创建猜大小失败', error)
-      throw error
-    }
-  }
-
-  /**
    * 删除记录
    */
   async delete(id: number) {
@@ -167,5 +153,57 @@ export class GuessService {
     }
 
     return guess
+  }
+
+  /**
+   * 根据期号查找记录
+   */
+  async findByIssueNumber(issueNumber: string) {
+    const guess = await this.guessRepository.findOne({
+      where: { issueNumber },
+    })
+
+    if (!guess) {
+      throw new Error('记录不存在')
+    }
+
+    return guess
+  }
+
+  /**
+   * 指定期号的结果
+   */
+  async setResult(issueNumber: string, number: number) {
+    try {
+      const guess = await this.guessRepository.findOne({
+        where: { issueNumber },
+      })
+
+      if (!guess) {
+        // 如果记录不存在，创建新记录
+        const guess = new Guess()
+        guess.issueNumber = issueNumber
+        guess.number = number
+        guess.result = number > 5 ? '大' : '小'
+
+        await this.guessRepository.save(guess)
+
+        this.logger.log(`创建第 ${issueNumber} 期猜大小成功：号码 ${number}，结果 ${guess.result}`)
+        return guess
+      }
+
+      // 更新号码和结果
+      guess.number = number
+      guess.result = number > 5 ? '大' : '小'
+
+      await this.guessRepository.save(guess)
+
+      this.logger.log(`修改第 ${issueNumber} 期猜大小成功：号码 ${number}，结果 ${guess.result}`)
+      return guess
+    }
+    catch (error) {
+      this.logger.error('设置猜大小结果失败', error)
+      throw error
+    }
   }
 }

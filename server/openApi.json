@@ -1413,6 +1413,30 @@
         ]
       }
     },
+    "/system/guess/issue/{issueNumber}": {
+      "get": {
+        "operationId": "GuessController_findByIssueNumber",
+        "summary": "根据期号查找记录",
+        "parameters": [
+          {
+            "name": "issueNumber",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "猜大小"
+        ]
+      }
+    },
     "/system/guess/update": {
       "post": {
         "operationId": "GuessController_update",
@@ -1428,10 +1452,10 @@
         ]
       }
     },
-    "/system/guess/create": {
+    "/system/guess/set-result": {
       "post": {
-        "operationId": "GuessController_create",
-        "summary": "手动创建记录",
+        "operationId": "GuessController_setResult",
+        "summary": "指定期号的结果",
         "parameters": [],
         "responses": {
           "201": {

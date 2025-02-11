@@ -29,6 +29,12 @@ export class GuessController {
     return await this.guessService.findOne(id)
   }
 
+  @Get('issue/:issueNumber')
+  @ApiOperation({ summary: '根据期号查找记录' })
+  async findByIssueNumber(@Param('issueNumber') issueNumber: string) {
+    return await this.guessService.findByIssueNumber(issueNumber)
+  }
+
   @Post('update')
   @ApiOperation({ summary: '修改记录' })
   async update(
@@ -38,10 +44,13 @@ export class GuessController {
     return await this.guessService.update(id, number)
   }
 
-  @Post('create')
-  @ApiOperation({ summary: '手动创建记录' })
-  async create(@Body('number') number: number) {
-    return await this.guessService.create(number)
+  @Post('set-result')
+  @ApiOperation({ summary: '指定期号的结果' })
+  async setResult(
+    @Body('issueNumber') issueNumber: string,
+    @Body('number') number: number,
+  ) {
+    return await this.guessService.setResult(issueNumber, number)
   }
 
   @Delete(':id')
