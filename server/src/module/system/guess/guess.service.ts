@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import dayjs from 'dayjs'
 import { Repository } from 'typeorm'
 
-import { Guess } from './guess.entity'
+import { Guess } from './entities/guess.entity'
 
 @Injectable()
 export class GuessService {

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { GuessController } from './guess.controller'
-import { Guess } from './guess.entity'
+import { Guess } from './entities/guess.entity'
 import { GuessService } from './guess.service'
 
 @Module({
