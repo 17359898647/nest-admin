@@ -3474,9 +3474,6 @@
           "remark": {
             "type": "string"
           },
-          "balance": {
-            "type": "number"
-          },
           "postSort": {
             "type": "number"
           }
@@ -3544,9 +3541,6 @@
           },
           "remark": {
             "type": "string"
-          },
-          "balance": {
-            "type": "number"
           },
           "postSort": {
             "type": "number"
