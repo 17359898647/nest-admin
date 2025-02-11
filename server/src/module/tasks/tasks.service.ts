@@ -1,26 +1,29 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
 
+import { GuessService } from '../system/guess/guess.service'
+
 @Injectable()
 export class TasksService {
   private readonly logger = new Logger(TasksService.name)
 
+  constructor(private readonly guessService: GuessService) {}
+
   /**
-   * 每5秒执行一次的定时任务
+   * 每5秒生成一期猜大小
    */
   @Cron(CronExpression.EVERY_5_SECONDS, {
-    name: 'test',
+    name: 'generateGuess',
     timeZone: 'Asia/Shanghai',
   })
   async handleTask() {
-    this.logger.log('开始执行定时任务...')
+    this.logger.log('开始生成新一期猜大小...')
     try {
-      // 在这里实现定时任务的具体逻辑
-
-      this.logger.log('定时任务执行完成')
+      await this.guessService.generateGuess()
+      this.logger.log('生成新一期猜大小完成')
     }
     catch (error) {
-      this.logger.error('定时任务执行失败', error)
+      this.logger.error('生成新一期猜大小失败', error)
     }
   }
 }

@@ -22,6 +22,7 @@ import { AuthModule } from './module/system/auth/auth.module'
 import { SysConfigModule } from './module/system/config/config.module'
 import { DeptModule } from './module/system/dept/dept.module'
 import { DictModule } from './module/system/dict/dict.module'
+import { GuessModule } from './module/system/guess/guess.module'
 import { MenuModule } from './module/system/menu/menu.module'
 import { NoticeModule } from './module/system/notice/notice.module'
 import { PostModule } from './module/system/post/post.module'
@@ -47,13 +48,21 @@ import { UploadModule } from './module/upload/upload.module'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        const mysqlConfig = config.get('db.mysql')
         return {
           type: 'mysql',
+          host: mysqlConfig.host,
+          port: mysqlConfig.port,
+          username: mysqlConfig.username,
+          password: mysqlConfig.password,
+          database: mysqlConfig.database,
           entities: [`${__dirname}/**/*.entity{.ts,.js}`],
           autoLoadEntities: true,
           keepConnectionAlive: true,
           timezone: '+08:00',
-          ...config.get('db.mysql'),
+          synchronize: true, // 自动同步数据库表结构
+          logging: true, // 显示 SQL 日志，方便调试
+          ...mysqlConfig,
         } as TypeOrmModuleOptions
       },
     }),
@@ -79,6 +88,7 @@ import { UploadModule } from './module/upload/upload.module'
     ToolModule,
     DeptModule,
     DictModule,
+    GuessModule,
     MenuModule,
     RoleModule,
     PostModule,
@@ -93,6 +103,7 @@ import { UploadModule } from './module/upload/upload.module'
     ServerModule,
     UploadModule,
     TasksModule,
+    GuessModule,
   ],
   providers: [
     {

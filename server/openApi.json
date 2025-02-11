@@ -1320,6 +1320,53 @@
         ]
       }
     },
+    "/system/guess/latest": {
+      "get": {
+        "operationId": "GuessController_getLatest",
+        "summary": "获取最新一期",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "猜大小"
+        ]
+      }
+    },
+    "/system/guess/history": {
+      "get": {
+        "operationId": "GuessController_getHistory",
+        "summary": "获取历史记录",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "size",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "猜大小"
+        ]
+      }
+    },
     "/system/menu": {
       "post": {
         "operationId": "MenuController_create",

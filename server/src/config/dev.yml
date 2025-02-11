@@ -37,8 +37,8 @@ db:
     logger: file
     logging: true
     multipleStatements: true
+    synchronize: true
     dropSchema: false
-    synchronize: false
     supportBigNumbers: true
     bigNumberStrings: true
 
