@@ -2,6 +2,7 @@ import { HttpModule } from '@nestjs/axios'
 import { Global, Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
+import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { RedisClientOptions } from '@songkeys/nestjs-redis'
 import { JwtAuthGuard } from 'src/common/guards/auth.guard'
@@ -27,6 +28,7 @@ import { PostModule } from './module/system/post/post.module'
 import { RoleModule } from './module/system/role/role.module'
 import { ToolModule } from './module/system/tool/tool.module'
 import { UserModule } from './module/system/user/user.module'
+import { TasksModule } from './module/tasks/tasks.module'
 import { UploadModule } from './module/upload/upload.module'
 
 @Global()
@@ -38,6 +40,8 @@ import { UploadModule } from './module/upload/upload.module'
       load: [configuration],
       isGlobal: true,
     }),
+    // 定时任务
+    ScheduleModule.forRoot(),
     // 数据库
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -88,6 +92,7 @@ import { UploadModule } from './module/upload/upload.module'
     OnlineModule,
     ServerModule,
     UploadModule,
+    TasksModule,
   ],
   providers: [
     {
