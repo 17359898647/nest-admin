@@ -420,7 +420,7 @@ export class UserService {
     const entity = this.userRepo.createQueryBuilder('user')
     entity.where({
       userId,
-      delFlag: DelFlagEnum.NORMAL,
+      delFlag: '0',
     })
     // 联查部门详情
     entity.leftJoinAndMapOne('user.dept', SysDeptEntity, 'dept', 'dept.deptId = user.deptId')
@@ -820,23 +820,7 @@ export class UserService {
    * @returns
    */
   async updateBalance(updateBalanceDto: UpdateBalanceDto) {
-    const { userId, amount } = updateBalanceDto
-    const user = await this.userRepo.findOne({ where: { userId } })
-    if (!user) {
-      throw new BadRequestException('用户不存在')
-    }
-
-    // 如果是减少余额，需要检查余额是否足够
-    if (amount < 0 && user.balance + amount < 0) {
-      throw new BadRequestException('用户余额不足')
-    }
-
-    // 更新用户余额
-    await this.userRepo.update(
-      { userId },
-      { balance: () => `balance + ${amount}` },
-    )
-    return this.findOne(userId)
+    throw new BadRequestException('功能已移除')
   }
 
   /**
