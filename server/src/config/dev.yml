@@ -34,7 +34,7 @@ db:
     database: admin_db
     port: 3306
     charset: utf8mb4
-    logger: file
+    logger: simple-console
     logging: true
     multipleStatements: true
     synchronize: true
