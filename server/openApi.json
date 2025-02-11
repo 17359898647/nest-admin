@@ -3402,55 +3402,6 @@
           "通用-文件上传"
         ]
       }
-    },
-    "/balance/{userId}": {
-      "get": {
-        "operationId": "BalanceController_getBalance",
-        "summary": "获取用户余额",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "余额管理"
-        ]
-      }
-    },
-    "/balance/update": {
-      "post": {
-        "operationId": "BalanceController_updateBalance",
-        "summary": "修改用户余额",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateBalanceDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "余额管理"
-        ]
-      }
     }
   },
   "info": {
@@ -3663,10 +3614,6 @@
           "amount": {
             "type": "number",
             "description": "金额变更值，可以为正数（增加金额）或负数（减少金额）"
-          },
-          "remark": {
-            "type": "string",
-            "description": "备注"
           }
         },
         "required": [

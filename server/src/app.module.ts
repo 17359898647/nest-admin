@@ -29,7 +29,6 @@ import { PostModule } from './module/system/post/post.module'
 import { RoleModule } from './module/system/role/role.module'
 import { ToolModule } from './module/system/tool/tool.module'
 import { UserModule } from './module/system/user/user.module'
-import { BalanceModule } from './module/system/balance/balance.module'
 import { TasksModule } from './module/tasks/tasks.module'
 import { UploadModule } from './module/upload/upload.module'
 
@@ -104,7 +103,6 @@ import { UploadModule } from './module/upload/upload.module'
     ServerModule,
     UploadModule,
     TasksModule,
-    BalanceModule,
   ],
   providers: [
     {
