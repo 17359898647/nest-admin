@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
-import * as bcrypt from 'bcrypt'
 import { Response } from 'express'
 import { LOGIN_TOKEN_EXPIRESIN, SYS_USER_TYPE } from 'src/common/constant/index'
 import { CacheEnum, DataScopeEnum, DelFlagEnum, StatusEnum } from 'src/common/enum/index'
@@ -50,11 +49,7 @@ export class UserService {
    * @returns
    */
   async create(createUserDto: CreateUserDto) {
-    const salt = bcrypt.genSaltSync(10)
-    if (createUserDto.password) {
-      createUserDto.password = await bcrypt.hashSync(createUserDto.password, salt)
-    }
-
+    // 直接使用明文密码存储
     const res = await this.userRepo.save({ ...createUserDto, userType: SYS_USER_TYPE.CUSTOM })
     const postEntity = this.sysUserWithPostEntityRep.createQueryBuilder('postEntity')
     const postValues = createUserDto.postIds.map((id) => {
@@ -324,7 +319,8 @@ export class UserService {
       select: ['userId', 'password'],
     })
 
-    if (!(data && bcrypt.compareSync(user.password, data.password))) {
+    // 直接比对明文密码
+    if (!(data && user.password === data.password)) {
       return ResultData.fail(500, `帐号或密码错误`)
     }
 
@@ -517,9 +513,7 @@ export class UserService {
     if (body.userId === 1) {
       return ResultData.fail(500, '系统用户不能重置密码')
     }
-    if (body.password) {
-      body.password = await bcrypt.hashSync(body.password, bcrypt.genSaltSync(10))
-    }
+    // 直接使用明文密码
     await this.userRepo.update(
       {
         userId: body.userId,
@@ -811,13 +805,12 @@ export class UserService {
   async updatePwd(user: any, updatePwdDto: UpdatePwdDto) {
     const { oldPassword, newPassword } = updatePwdDto
     const userInfo = await this.userRepo.findOne({ where: { userId: user.user.userId } })
-    const comparePassword = bcrypt.compareSync(oldPassword, userInfo.password)
-    if (!comparePassword) {
+    // 直接比对明文密码
+    if (oldPassword !== userInfo.password) {
       throw new BadRequestException('原密码错误')
     }
-    const salt = bcrypt.genSaltSync(10)
-    const hashNewPassword = bcrypt.hashSync(newPassword, salt)
-    await this.userRepo.update({ userId: user.user.userId }, { password: hashNewPassword })
+    // 直接存储新的明文密码
+    await this.userRepo.update({ userId: user.user.userId }, { password: newPassword })
     return ResultData.ok()
   }
 

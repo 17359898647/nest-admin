@@ -1,9 +1,9 @@
 {
   "name": "nest-v10",
   "version": "0.0.1",
+  "private": true,
   "description": "",
   "author": "",
-  "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
