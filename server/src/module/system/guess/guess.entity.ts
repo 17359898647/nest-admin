@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
-@Entity()
+@Entity('tw_guess')
 export class Guess {
   @PrimaryGeneratedColumn()
   id: number
@@ -14,6 +14,6 @@ export class Guess {
   @Column({ comment: '大小结果', length: 10 })
   result: string
 
-  @CreateDateColumn({ comment: '创建时间' })
+  @CreateDateColumn({ comment: '创建时间', type: 'timestamp' })
   createTime: Date
 }
